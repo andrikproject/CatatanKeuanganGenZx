@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,10 +40,10 @@ fun LaporanScreen(
                 title = { Text("📊 Laporan", style = MaterialTheme.typography.headlineMedium, color = Color.White) },
                 actions = {
                     IconButton(onClick = { showMonthPicker = true }) {
-                        Icon(Icons.Default.CalendarMonth, "Bulan", tint = Color.White)
+                        Icon(Icons.Default.DateRange, "Bulan", tint = Color.White)
                     }
                     IconButton(onClick = { onNavigateToWrapped(state.selectedMonth, state.selectedYear) }) {
-                        Icon(Icons.Default.AutoAwesome, "Wrapped", tint = Color.White)
+                        Icon(Icons.Default.Stars, "Wrapped", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Teal)
@@ -67,7 +68,7 @@ fun LaporanScreen(
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(onClick = { showMonthPicker = true }) {
-                        Icon(Icons.Default.ExpandMore, null, tint = Teal)
+                        Icon(Icons.Default.KeyboardArrowDown, null, tint = Teal)
                     }
                 }
             }

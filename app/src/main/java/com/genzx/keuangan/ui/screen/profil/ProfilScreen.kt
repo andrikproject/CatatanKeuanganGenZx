@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.AccountBox
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -111,13 +111,13 @@ fun ProfilScreen(
             // Menu sections
             MenuSection(title = "Kelola Keuangan") {
                 MenuItem(
-                    icon = Icons.Outlined.AccountBalanceWallet,
+                    icon = Icons.Outlined.AccountBox,
                     label = "Kelola Akun",
                     subtitle = "${state.accounts.size} akun terdaftar",
                     onClick = onNavigateToKelolaAkun
                 )
                 MenuItem(
-                    icon = Icons.Outlined.Savings,
+                    icon = Icons.Outlined.MonetizationOn,
                     label = "Kelola Budget",
                     subtitle = "Atur batas pengeluaran per kategori",
                     onClick = onNavigateToKelolaBudget
@@ -145,7 +145,7 @@ fun ProfilScreen(
                     onClick = {}
                 )
                 MenuItem(
-                    icon = Icons.Outlined.Code,
+                    icon = Icons.Outlined.Info,
                     label = "Versi",
                     subtitle = "1.0.0 - Built with ❤️",
                     onClick = {}

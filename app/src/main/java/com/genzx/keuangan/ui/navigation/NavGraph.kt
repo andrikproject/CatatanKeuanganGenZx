@@ -20,7 +20,6 @@ import com.genzx.keuangan.ui.screen.akun.KelolaAkunScreen
 import com.genzx.keuangan.ui.screen.akun.DetailAkunScreen
 import com.genzx.keuangan.ui.screen.akun.TransferScreen
 import com.genzx.keuangan.ui.screen.akun.KelolaBudgetScreen
-import com.genzx.keuangan.ui.screen.akun.TambahBudgetDialog
 import com.genzx.keuangan.ui.screen.wrapped.WrappedFinansialScreen
 import com.genzx.keuangan.ui.viewmodel.MainViewModel
 

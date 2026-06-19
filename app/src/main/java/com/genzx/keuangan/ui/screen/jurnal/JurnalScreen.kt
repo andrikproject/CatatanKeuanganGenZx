@@ -58,7 +58,7 @@ fun JurnalScreen(
                     },
                     actions = {
                         IconButton(onClick = { showMonthPicker = true }) {
-                            Icon(Icons.Default.CalendarMonth, "Bulan", tint = Color.White)
+                            Icon(Icons.Default.DateRange, "Bulan", tint = Color.White)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Teal)

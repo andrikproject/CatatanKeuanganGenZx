@@ -53,8 +53,8 @@ fun GenZxMainScreen(mainViewModel: MainViewModel) {
 
     val bottomNavItems = listOf(
         BottomNavItem(Screen.Home.route, "Beranda", Icons.Filled.Home, Icons.Outlined.Home),
-        BottomNavItem(Screen.Jurnal.route, "Jurnal", Icons.Filled.Book, Icons.Outlined.Book),
-        BottomNavItem(Screen.Laporan.route, "Laporan", Icons.Filled.BarChart, Icons.Outlined.BarChart),
+        BottomNavItem(Screen.Jurnal.route, "Jurnal", Icons.Filled.List, Icons.Outlined.List),
+        BottomNavItem(Screen.Laporan.route, "Laporan", Icons.Filled.PieChart, Icons.Outlined.PieChart),
         BottomNavItem(Screen.Profil.route, "Profil", Icons.Filled.Person, Icons.Outlined.Person)
     )
 
