@@ -95,6 +95,7 @@ fun KelolaBudgetScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TambahBudgetDialog(
     onDismiss: () -> Unit,
