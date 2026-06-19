@@ -24,7 +24,7 @@ cd "$SAVED" >/dev/null
 APP_NAME="Gradle"
 APP_BASE_NAME=`basename "$0"`
 
-DEFAULT_JVM_OPTS='"--add-opens=java.base/java.util=ALL-UNNAMED" "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED" "--add-opens=java.base/java.lang=ALL-UNNAMED" "--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED"'
+DEFAULT_JVM_OPTS='--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED'
 
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD=maximum
