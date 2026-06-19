@@ -264,7 +264,7 @@ fun CategoryBar(
         }
         Spacer(modifier = Modifier.height(6.dp))
         LinearProgressIndicator(
-            progress = summary.percentage,
+            progress = { summary.percentage },
             modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
             color = barColor,
             trackColor = SurfaceVariant

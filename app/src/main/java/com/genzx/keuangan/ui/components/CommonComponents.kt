@@ -120,10 +120,9 @@ fun SummaryCard(
             isHidden = isHidden,
             isIncome = true
         )
-        Divider(
+        VerticalDivider(
             modifier = Modifier
                 .height(40.dp)
-                .width(1.dp)
                 .align(Alignment.CenterVertically),
             color = Color.White.copy(alpha = 0.3f)
         )
@@ -269,7 +268,7 @@ fun BudgetProgressCard(
             }
             Spacer(modifier = Modifier.height(6.dp))
             LinearProgressIndicator(
-                progress = budget.progressPercent,
+                progress = { budget.progressPercent },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp)
