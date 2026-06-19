@@ -18,10 +18,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.genzx.keuangan.domain.model.CategorySummary
 import com.genzx.keuangan.domain.model.CATEGORY_ICONS
+import com.genzx.keuangan.domain.model.EXPENSE_CATEGORIES
 import com.genzx.keuangan.ui.components.EmptyState
 import com.genzx.keuangan.ui.components.MonthYearPickerDialog
 import com.genzx.keuangan.ui.components.SectionHeader
-import com.genzx.keuangan.ui.screen.jurnal.MonthPickerDialog
 import com.genzx.keuangan.ui.theme.*
 import com.genzx.keuangan.ui.viewmodel.MainViewModel
 import com.genzx.keuangan.util.FormatUtil

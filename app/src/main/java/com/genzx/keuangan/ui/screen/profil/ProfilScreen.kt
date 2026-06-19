@@ -1,6 +1,7 @@
 package com.genzx.keuangan.ui.screen.profil
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons

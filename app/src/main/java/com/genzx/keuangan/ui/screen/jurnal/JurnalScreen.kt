@@ -23,6 +23,7 @@ import com.genzx.keuangan.domain.model.CATEGORY_ICONS
 import com.genzx.keuangan.ui.components.*
 import com.genzx.keuangan.ui.theme.*
 import com.genzx.keuangan.ui.viewmodel.MainViewModel
+import com.genzx.keuangan.ui.viewmodel.JurnalUiState
 import com.genzx.keuangan.util.FormatUtil
 import java.time.LocalDate
 
@@ -180,7 +181,7 @@ fun JurnalScreen(
 }
 
 @Composable
-fun MonthSummaryCard(state: com.genzx.keuangan.ui.viewmodel.JurnalUiState) {
+fun MonthSummaryCard(state: JurnalUiState) {
     val income = state.transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
     val expense = state.transactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
 

@@ -44,8 +44,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build Debug APK
-        run: |
-          ./gradlew assembleDebug --stacktrace 2>&1 | tail -200
+        run: ./gradlew assembleDebug --stacktrace 2>&1 | tail -150
         env:
           ANDROID_HOME: /usr/local/lib/android/sdk
 
@@ -55,9 +54,10 @@ jobs:
           name: CatatanKeuanganGenZx-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
+          if-no-files-found: warn
 
       - name: Build Release APK (unsigned)
-        run: ./gradlew assembleRelease --stacktrace
+        run: ./gradlew assembleRelease --stacktrace 2>&1 | tail -150
         env:
           ANDROID_HOME: /usr/local/lib/android/sdk
 
@@ -67,3 +67,4 @@ jobs:
           name: CatatanKeuanganGenZx-release
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 30
+          if-no-files-found: warn

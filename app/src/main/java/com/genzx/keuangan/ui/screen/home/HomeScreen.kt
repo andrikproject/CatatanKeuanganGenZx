@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.*
 import com.genzx.keuangan.domain.model.*
 import com.genzx.keuangan.ui.theme.*
 import com.genzx.keuangan.ui.viewmodel.MainViewModel
+import com.genzx.keuangan.ui.viewmodel.HomeUiState
 import com.genzx.keuangan.util.FormatUtil
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -84,7 +85,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeHeader(
-    state: com.genzx.keuangan.ui.viewmodel.HomeUiState,
+    state: HomeUiState,
     viewModel: MainViewModel,
     now: LocalDate,
     onNavigateToWrapped: (Int, Int) -> Unit
@@ -324,7 +325,7 @@ fun QuickActionItem(
 }
 
 @Composable
-fun SummaryCards(state: com.genzx.keuangan.ui.viewmodel.HomeUiState) {
+fun SummaryCards(state: HomeUiState) {
     val savings = state.monthlyIncome - state.monthlyExpense
     val savingsRate = if (state.monthlyIncome > 0) (savings / state.monthlyIncome * 100).toInt() else 0
 
