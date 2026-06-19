@@ -1,6 +1,7 @@
 package com.genzx.keuangan.ui.screen.jurnal
 
 import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.*
@@ -23,7 +24,7 @@ import com.genzx.keuangan.ui.viewmodel.MainViewModel
 import com.genzx.keuangan.util.FormatUtil
 import java.time.LocalDate
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun JurnalScreen(
     viewModel: MainViewModel,
