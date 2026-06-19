@@ -13,11 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import com.genzx.keuangan.domain.model.Transaction
 import com.genzx.keuangan.domain.model.TransactionType
+import com.genzx.keuangan.domain.model.CATEGORY_ICONS
 import com.genzx.keuangan.ui.components.*
 import com.genzx.keuangan.ui.theme.*
 import com.genzx.keuangan.ui.viewmodel.MainViewModel
@@ -36,7 +38,6 @@ fun JurnalScreen(
     var showMonthPicker by remember { mutableStateOf(false) }
     val filters = listOf("Semua", "Pemasukan", "Pengeluaran")
 
-    // Group transactions by date
     val grouped = state.filteredTransactions
         .groupBy { it.date.take(10) }
         .toSortedMap(compareByDescending { it })
@@ -44,26 +45,61 @@ fun JurnalScreen(
     Scaffold(
         topBar = {
             Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Jurnal 📝",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.White
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Brush.horizontalGradient(listOf(GradientStart, GradientEnd)))
+                ) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "Jurnal 📝",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) {
+                                Icon(Icons.Default.ArrowBack, null, tint = Color.White)
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { showMonthPicker = true }) {
+                                Icon(Icons.Default.DateRange, null, tint = Color.White)
+                            }
+                            IconButton(onClick = { onNavigateToTambah("EXPENSE") }) {
+                                Icon(Icons.Default.Add, null, tint = Color.White)
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+                    )
+                }
+
+                // Filter chips
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SurfaceLight)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    filters.forEach { filter ->
+                        val selected = state.selectedFilter == filter
+                        FilterChip(
+                            selected = selected,
+                            onClick = { viewModel.setJurnalFilter(filter) },
+                            label = { Text(filter, style = MaterialTheme.typography.labelMedium) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = OceanLight,
+                                selectedLabelColor = Color.White,
+                                containerColor = SurfaceVariantLight
+                            ),
+                            border = null
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(Icons.Default.ArrowBack, "Kembali", tint = Color.White)
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = { showMonthPicker = true }) {
-                            Icon(Icons.Default.DateRange, "Bulan", tint = Color.White)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Teal)
-                )
+                    }
+                }
+
                 // Search bar
                 OutlinedTextField(
                     value = state.searchQuery,
@@ -78,12 +114,16 @@ fun JurnalScreen(
                         }
                     },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().background(Teal).padding(horizontal = 16.dp, vertical = 8.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(SurfaceLight)
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                        .padding(bottom = 8.dp),
+                    shape = RoundedCornerShape(14.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = SurfaceLight,
-                        unfocusedContainerColor = SurfaceLight,
-                        focusedBorderColor = Color.Transparent,
+                        focusedContainerColor = BackgroundLight,
+                        unfocusedContainerColor = BackgroundLight,
+                        focusedBorderColor = OceanLight,
                         unfocusedBorderColor = Color.Transparent
                     )
                 )
@@ -95,116 +135,26 @@ fun JurnalScreen(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(bottom = 100.dp)
         ) {
-            // Month header
+            // Month header + summary
             item {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = FormatUtil.formatMonthYear(state.selectedMonth, state.selectedYear),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = TextPrimary,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "${state.filteredTransactions.size} transaksi",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextSecondary
-                    )
-                }
-            }
-
-            // Summary
-            item {
-                val income = state.filteredTransactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
-                val expense = state.filteredTransactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    JurnalSummaryChip(
-                        label = "Masuk",
-                        amount = income,
-                        color = IncomeGreenLight,
-                        textColor = IncomeGreen,
-                        modifier = Modifier.weight(1f)
-                    )
-                    JurnalSummaryChip(
-                        label = "Keluar",
-                        amount = expense,
-                        color = ExpenseRedLight,
-                        textColor = ExpenseRed,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            // Filter tabs
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    filters.forEach { filter ->
-                        FilterChip(
-                            selected = state.selectedFilter == filter,
-                            onClick = { viewModel.setJurnalFilter(filter) },
-                            label = { Text(filter, style = MaterialTheme.typography.labelMedium) },
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Teal,
-                                selectedLabelColor = Color.White
-                            )
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
+                MonthSummaryCard(state)
             }
 
             if (state.filteredTransactions.isEmpty()) {
                 item {
                     EmptyState(
-                        emoji = "📖",
                         title = "Tidak ada transaksi",
-                        subtitle = if (state.searchQuery.isNotEmpty()) "Coba kata kunci lain" else "Belum ada transaksi di bulan ini"
+                        subtitle = if (state.searchQuery.isNotEmpty()) "Coba kata kunci lain" else "Belum ada transaksi di bulan ini",
+                        emoji = "📝"
                     )
                 }
             } else {
                 grouped.forEach { (dateStr, transactions) ->
-                    // Date header
                     stickyHeader {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(BackgroundLight)
-                                .padding(horizontal = 16.dp, vertical = 6.dp)
-                        ) {
-                            val date = try { java.time.LocalDate.parse(dateStr) } catch (e: Exception) { null }
-                            val today = LocalDate.now()
-                            val label = when (date) {
-                                today -> "Hari ini"
-                                today.minusDays(1) -> "Kemarin"
-                                else -> FormatUtil.formatDateFull(dateStr + "T00:00:00")
-                            }
-                            Text(
-                                text = label,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = Teal,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
+                        DateGroupHeader(dateStr)
                     }
-
-                    // Transactions for this date
                     items(transactions) { transaction ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(containerColor = SurfaceLight),
-                            elevation = CardDefaults.cardElevation(1.dp)
-                        ) {
+                        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 3.dp)) {
                             TransactionItem(
                                 transaction = transaction,
                                 onClick = { onNavigateToEdit(transaction.id) }
@@ -216,14 +166,13 @@ fun JurnalScreen(
         }
     }
 
-    // Month Picker Dialog
     if (showMonthPicker) {
-        MonthPickerDialog(
+        MonthYearPickerDialog(
             currentMonth = state.selectedMonth,
             currentYear = state.selectedYear,
             onDismiss = { showMonthPicker = false },
-            onConfirm = { month, year ->
-                viewModel.setJurnalMonth(month, year)
+            onConfirm = { m, y ->
+                viewModel.setJurnalMonth(m, y)
                 showMonthPicker = false
             }
         )
@@ -231,95 +180,87 @@ fun JurnalScreen(
 }
 
 @Composable
-fun JurnalSummaryChip(
-    label: String,
-    amount: Double,
-    color: Color,
-    textColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(color)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+fun MonthSummaryCard(state: com.genzx.keuangan.ui.viewmodel.JurnalUiState) {
+    val income = state.transactions.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
+    val expense = state.transactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
+
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = textColor)
-        Text(FormatUtil.formatCurrencyShort(amount), style = MaterialTheme.typography.titleSmall, color = textColor, fontWeight = FontWeight.Bold)
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                FormatUtil.formatMonthYear(state.selectedMonth, state.selectedYear),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
+            Text(
+                "${state.transactions.size} transaksi",
+                style = MaterialTheme.typography.labelSmall,
+                color = TextHint
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Surface(
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    color = IncomeGreen.copy(alpha = 0.1f)
+                ) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Text("📈 Pemasukan", style = MaterialTheme.typography.labelSmall, color = IncomeGreenDark)
+                        Text(FormatUtil.formatCurrencyShort(income), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = IncomeGreenDark)
+                    }
+                }
+                Surface(
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    color = ExpenseRed.copy(alpha = 0.1f)
+                ) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Text("📉 Pengeluaran", style = MaterialTheme.typography.labelSmall, color = ExpenseRedDark)
+                        Text(FormatUtil.formatCurrencyShort(expense), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = ExpenseRedDark)
+                    }
+                }
+            }
+        }
     }
 }
 
+@Composable
+fun DateGroupHeader(dateStr: String) {
+    val date = try { java.time.LocalDate.parse(dateStr) } catch (e: Exception) { null }
+    val today = LocalDate.now()
+    val label = when (date) {
+        today -> "🗓 Hari ini"
+        today.minusDays(1) -> "🗓 Kemarin"
+        else -> "🗓 ${date?.format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM", java.util.Locale("id"))) ?: dateStr}"
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BackgroundLight)
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.labelLarge,
+            color = TextSecondary,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+// Keep for NavGraph compat
 @Composable
 fun MonthPickerDialog(
     currentMonth: Int,
     currentYear: Int,
     onDismiss: () -> Unit,
-    onConfirm: (Int, Int) -> Unit
+    onConfirm: (month: Int, year: Int) -> Unit
 ) {
-    var selectedMonth by remember { mutableIntStateOf(currentMonth) }
-    var selectedYear by remember { mutableIntStateOf(currentYear) }
-    val months = FormatUtil.getMonthNames()
-    val years = (2020..java.time.LocalDate.now().year + 1).toList()
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Pilih Bulan", style = MaterialTheme.typography.headlineSmall) },
-        text = {
-            Column {
-                // Year selector
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { if (selectedYear > 2020) selectedYear-- }) {
-                        Icon(Icons.Default.ChevronLeft, null)
-                    }
-                    Text("$selectedYear", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    IconButton(onClick = { selectedYear++ }) {
-                        Icon(Icons.Default.ChevronRight, null)
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                // Month grid
-                val chunked = months.chunked(3)
-                chunked.forEachIndexed { rowIdx, rowMonths ->
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        rowMonths.forEachIndexed { colIdx, month ->
-                            val monthIdx = rowIdx * 3 + colIdx + 1
-                            val isSelected = monthIdx == selectedMonth
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(if (isSelected) Teal else SurfaceVariant)
-                                    .clickable { selectedMonth = monthIdx }
-                                    .padding(vertical = 8.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = month.take(3),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = if (isSelected) Color.White else TextPrimary,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                )
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = { onConfirm(selectedMonth, selectedYear) },
-                colors = ButtonDefaults.buttonColors(containerColor = Teal)
-            ) { Text("Pilih") }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Batal") }
-        }
-    )
+    MonthYearPickerDialog(currentMonth, currentYear, onDismiss, onConfirm)
 }

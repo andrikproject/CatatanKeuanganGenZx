@@ -1,57 +1,59 @@
 package com.genzx.keuangan.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColorScheme = lightColorScheme(
-    primary = Teal,
-    onPrimary = SurfaceLight,
-    primaryContainer = TealContainer,
-    onPrimaryContainer = OnTealContainer,
-    secondary = LilacSoft,
-    onSecondary = SurfaceLight,
-    secondaryContainer = LilacContainer,
-    onSecondaryContainer = TextPrimary,
-    tertiary = MintSoft,
-    onTertiary = SurfaceLight,
+    primary = OceanLight,
+    onPrimary = Color.White,
+    primaryContainer = OceanContainer,
+    onPrimaryContainer = OnOceanContainer,
+    secondary = VioletAccent,
+    onSecondary = Color.White,
+    secondaryContainer = VioletContainer,
+    onSecondaryContainer = OnVioletContainer,
+    tertiary = MintAccent,
+    onTertiary = Color.White,
     tertiaryContainer = MintContainer,
     onTertiaryContainer = TextPrimary,
     background = BackgroundLight,
     onBackground = TextPrimary,
     surface = SurfaceLight,
     onSurface = TextPrimary,
-    surfaceVariant = SurfaceVariant,
+    surfaceVariant = SurfaceVariantLight,
     onSurfaceVariant = TextSecondary,
     outline = OutlineLight,
     error = ExpenseRed,
-    onError = SurfaceLight,
+    onError = Color.White,
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = TealDarkTheme,
+    primary = OceanBright,
     onPrimary = BackgroundDark,
-    primaryContainer = TealDark,
-    onPrimaryContainer = TealContainer,
-    secondary = LilacSoft,
+    primaryContainer = OceanMid,
+    onPrimaryContainer = OceanContainer,
+    secondary = VioletLight,
     onSecondary = BackgroundDark,
-    secondaryContainer = Color(0xFF4A148C),
-    onSecondaryContainer = LilacContainer,
+    secondaryContainer = Color(0xFF3D1A8C),
+    onSecondaryContainer = VioletContainer,
+    tertiary = MintSoft,
+    onTertiary = BackgroundDark,
+    tertiaryContainer = Color(0xFF00453D),
+    onTertiaryContainer = MintContainer,
     background = BackgroundDark,
-    onBackground = SurfaceLight,
+    onBackground = TextPrimaryDark,
     surface = SurfaceDark,
-    onSurface = SurfaceLight,
+    onSurface = TextPrimaryDark,
     surfaceVariant = SurfaceVariantDark,
-    onSurfaceVariant = TextHint,
-    outline = Color(0xFF30363D),
+    onSurfaceVariant = TextSecondaryDark,
+    outline = OutlineDark,
     error = ExpenseRed,
     onError = BackgroundDark,
 )
@@ -67,7 +69,8 @@ fun CatatanKeuanganGenZxTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = android.graphics.Color.TRANSPARENT
+            WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
